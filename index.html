@@ -41,7 +41,6 @@
             color: var(--gold);
             text-decoration: none;
             font-family: 'Amiri', serif;
-            transition: 0.3s;
         }
 
         .logo-glow span {
@@ -57,50 +56,58 @@
             text-decoration: none;
         }
 
-        .icon-link:hover {
-            transform: translateY(-3px);
-            color: var(--accent);
-        }
-
         .badge-count {
             font-size: 0.65rem;
             padding: 3px 6px;
             border: 2px solid white;
         }
 
-        /* --- Hero Slider (Fixed for Mobile) --- */
+        /* --- Search Box --- */
+        .search-container {
+            margin-top: -30px;
+            position: relative;
+            z-index: 100;
+        }
+
+        .search-box {
+            background: white;
+            border-radius: 50px;
+            padding: 12px 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(101, 19, 70, 0.1);
+        }
+
+        .search-box input {
+            border: none;
+            outline: none;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        /* --- Hero Slider --- */
         .hero-slide {
             height: 85vh;
             background-size: cover;
-            background-position: center center;
+            background-position: center;
             display: flex;
             align-items: center;
             position: relative;
             overflow: hidden;
         }
 
-        /* تأثير التكبير البطيء المطور */
         .carousel-item.active .hero-slide {
             animation: slowZoom 10s infinite alternate ease-in-out;
         }
 
         @keyframes slowZoom {
-            from {
-                transform: scale(1);
-            }
-
-            to {
-                transform: scale(1.1);
-            }
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
         }
 
         .hero-slide::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent);
             z-index: 1;
         }
@@ -108,16 +115,14 @@
         .hero-content {
             position: relative;
             z-index: 2;
-            text-align: right;
             color: white;
             text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.4);
-            padding: 0 15px;
+            text-align: right;
         }
 
         .hero-content h1 {
-            font-size: clamp(2.2rem, 8vw, 3.8rem);
+            font-size: clamp(2rem, 8vw, 3.8rem);
             font-weight: 900;
-            margin-bottom: 1rem;
         }
 
         .hero-content h1 span {
@@ -133,7 +138,7 @@
             background: white;
             border: none;
             height: 100%;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
 
         .product-card:hover {
@@ -170,84 +175,74 @@
             border-radius: 50%;
             color: #ff4d6d;
             z-index: 10;
-            transition: 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        .wishlist-btn:hover {
-            background: white;
-            transform: scale(1.1);
-            color: #ff002b;
-        }
-
         .btn-glow {
             background: linear-gradient(45deg, var(--gold), var(--accent));
             color: white !important;
-            border: none;
             padding: 12px 35px;
             border-radius: 50px;
             font-weight: 700;
-            transition: 0.4s;
             text-decoration: none;
             display: inline-block;
+            transition: 0.3s;
+            border: none;
         }
 
-        .btn-glow:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(101, 19, 70, 0.3);
+        /* --- Why Us Section --- */
+        .feature-card {
+            padding: 30px;
+            background: white;
+            border-radius: 20px;
+            text-align: center;
+            height: 100%;
+            transition: 0.3s;
         }
 
-        /* --- Toast Notification --- */
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 15px;
+        }
+
+        /* --- نظام التنبيهات (Custom Toasts) --- */
         .custom-toast {
             position: fixed;
-            bottom: 25px;
-            right: 25px;
+            bottom: 30px;
+            right: 30px;
             background: var(--gold);
             color: white;
-            padding: 15px 25px;
-            border-radius: 15px;
+            padding: 15px 30px;
+            border-radius: 50px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            z-index: 10000;
+            z-index: 9999;
             display: flex;
             align-items: center;
             gap: 10px;
-            animation: animate__fadeInUp 0.5s;
+            direction: rtl;
         }
 
-        /* --- Media Queries (Mobile Fixes) --- */
+        #toast-container {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 10000;
+            width: 320px;
+        }
+
         @media (max-width: 768px) {
-            .hero-slide {
-                height: 60vh;
-                /* تصغير الطول للموبايل لمنع الزوم البشع */
-            }
-
-            .hero-content {
-                text-align: center;
-                /* سنترنا الكلام لشكل أفضل */
-            }
-
-            .hero-content h1 {
-                font-size: 2.2rem;
-            }
-
-            .img-wrapper {
-                height: 250px;
-                /* تقليل حجم صور المنتجات في الموبايل */
-            }
-
-            @keyframes slowZoom {
-                from {
-                    transform: scale(1);
-                }
-
-                to {
-                    transform: scale(1.05);
-                }
-
-                /* زوم أخف للموبايل */
-            }
+            .hero-slide { height: 60vh; }
+            .hero-content { text-align: center; }
+            .img-wrapper { height: 250px; }
+            .custom-toast { right: 10px; left: 10px; bottom: 20px; justify-content: center; }
         }
     </style>
 </head>
@@ -257,27 +252,22 @@
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand logo-glow" href="index.html">GLOW<span>STORE</span></a>
-
             <div class="d-flex align-items-center order-lg-last gap-3">
                 <a href="profile.html" class="icon-link"><i class="far fa-user"></i></a>
                 <a href="wishlist.html" class="icon-link">
                     <i class="far fa-heart"></i>
-                    <span
-                        class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle badge-count"
+                    <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle badge-count"
                         id="wishlistCount">0</span>
                 </a>
                 <a href="cart.html" class="icon-link" id="cartIcon">
                     <i class="fas fa-shopping-bag"></i>
-                    <span
-                        class="badge rounded-pill bg-dark position-absolute top-0 start-100 translate-middle badge-count"
+                    <span class="badge rounded-pill bg-dark position-absolute top-0 start-100 translate-middle badge-count"
                         id="cartCount">0</span>
                 </a>
             </div>
-
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item"><a class="nav-link active fw-bold" href="index.html"
@@ -291,73 +281,76 @@
 
     <header id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-inner">
-            <div class="carousel-item active" data-bs-interval="4000">
+            <div class="carousel-item active">
                 <div class="hero-slide" style="background-image: url('./assets/img1.avif');">
                     <div class="container hero-content">
                         <h1 class="animate__animated animate__fadeInRight">تألقي بلمسة من <span>Glow</span></h1>
-                        <p class="fs-4 mb-4 animate__animated animate__fadeInRight animate__delay-1s">إكسسوارات صُممت
-                            لتبرز جمالكِ الخاص</p>
+                        <p class="fs-4 mb-4">إكسسوارات صُممت لتبرز جمالكِ الخاص</p>
                         <a href="#products" class="btn btn-glow">تسوقي الآن</a>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item" data-bs-interval="4000">
-                <div class="hero-slide" style="background-image: url('./assets/img2.avif');">
-                    <div class="container hero-content">
-                        <h1 class="animate__animated animate__fadeInUp">جمالكِ <span>أولويتنا</span></h1>
-                        <p class="fs-4 mb-4">تشكيلة واسعة من أحدث صيحات الموضة</p>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item" data-bs-interval="4000">
-                <div class="hero-slide" style="background-image: url('./assets/img3.avif');">
-                    <div class="container hero-content text-center">
-                        <h1 class="animate__animated animate__zoomIn">سحر <span>التفاصيل</span></h1>
-                        <p class="fs-4 mb-4">قطع فريدة تضفي عليكِ بريقاً خاصاً</p>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item" data-bs-interval="4000">
-                <div class="hero-slide" style="background-image: url('./assets/img4.avif');">
-                    <div class="container hero-content">
-                        <h1>عالم من <span>الأناقة</span></h1>
-                        <p class="fs-4 mb-4">اختياراتنا تعكس ذوقك الرفيع</p>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item" data-bs-interval="4000">
-                <div class="hero-slide" style="background-image: url('./assets/img5.avif');">
-                    <div class="container hero-content text-center">
-                        <h1>نعومة <span>ورقة</span></h1>
-                        <p class="fs-4 mb-4">خامات مختارة بعناية لأجلكِ</p>
-                    </div>
-                </div>
-            </div>
-            <div class="carousel-item" data-bs-interval="4000">
-                <div class="hero-slide" style="background-image: url('./assets/img6.avif');">
-                    <div class="container hero-content">
-                        <h1>بريق <span>لا ينطفئ</span></h1>
-                        <p class="fs-4 mb-4">اكتشفي سر الجمال مع Glow Store</p>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <section id="products" class="py-5">
+    <div class="container search-container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="search-box d-flex align-items-center">
+                    <i class="fas fa-search text-muted"></i>
+                    <input type="text" id="searchInput" placeholder="ابحثي عن منتجك المفضل...">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="products" class="py-5 bg-white">
         <div class="container">
             <div class="text-center mb-5">
                 <h2 class="fw-bold" style="color: var(--gold);">مجموعتنا المختارة</h2>
-                <div style="width: 60px; height: 3px; background: var(--gold); margin: 10px auto;"></div>
             </div>
             <div class="row g-4" id="productsGrid">
+                </div>
+        </div>
+    </section>
+
+    <section id="features" class="py-5">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold" style="color: var(--gold);">لماذا تختارين Glow Store؟</h2>
+                <div style="width: 50px; height: 3px; background: var(--gold); margin: 10px auto;"></div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card shadow-sm">
+                        <i class="fas fa-certificate feature-icon"></i>
+                        <h5>جودة مضمونة</h5>
+                        <p class="text-muted small">منتجاتنا تخضع لأعلى معايير الجودة لضمان بريق يدوم طويلاً.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card shadow-sm">
+                        <i class="fas fa-lock feature-icon"></i>
+                        <h5>دفع آمن</h5>
+                        <p class="text-muted small">تشفير كامل لبياناتك وعمليات دفع موثوقة بنسبة 100%.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card shadow-sm">
+                        <i class="fas fa-headset feature-icon"></i>
+                        <h5>دعم متواصل</h5>
+                        <p class="text-muted small">فريقنا متاح دائماً للإجابة على استفساراتك ومساعدتك في اختيار الأنسب.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <footer class="py-4 bg-white border-top text-center">
-        <p class="text-muted mb-0">© 2024 Glow Store - جميع الحقوق محفوظة لجمالكِ ✨</p>
+        <p class="text-muted mb-0">© 2026 Glow Store - جميع الحقوق محفوظة لجمالكِ ✨</p>
     </footer>
+
+    <div id="toast-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/main.js"></script>

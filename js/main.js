@@ -34,7 +34,7 @@ function renderProducts() {
 
     grid.innerHTML = products.map((product, index) => {
         const isInWishlist = wishlist.some(item => item.id === product.id);
-        
+
         return `
         <div class="col-lg-3 col-md-6 col-6 animate__animated animate__fadeInUp" style="animation-delay: ${index * 0.05}s">
             <div class="card h-100 product-card shadow-sm border-0">
@@ -69,7 +69,7 @@ function addToCart(id) {
 
     localStorage.setItem('glow_cart', JSON.stringify(cart));
     updateBadges();
-    
+
     const cartIcon = document.getElementById('cartIcon');
     cartIcon.classList.add('animate__animated', 'animate__rubberBand');
     setTimeout(() => cartIcon.classList.remove('animate__animated', 'animate__rubberBand'), 1000);
@@ -99,7 +99,7 @@ function toggleWishlist(id) {
 function updateBadges() {
     const cartCount = document.getElementById('cartCount');
     const wishCount = document.getElementById('wishlistCount');
-    
+
     if (cartCount) {
         const total = cart.reduce((sum, item) => sum + item.quantity, 0);
         cartCount.innerText = total;
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 function checkOrderStatusUpdates() {
     // 1. جلب الطلبات الحالية
     const orders = JSON.parse(localStorage.getItem('glow_orders')) || [];
-    
+
     // 2. جلب "آخر حالة معروفة" مخزنة عند العميل
     // ده مفتاح هنخزن فيه الحالات عشان نعرف لو فيه جديد حصل
     const lastKnownStatus = JSON.parse(localStorage.getItem('glow_orders_status_tracker')) || {};
@@ -149,14 +149,14 @@ function checkOrderStatusUpdates() {
 
         // 3. المقارنة: لو الحالة الحالية مختلفة عن اللي اليوزر شافها قبل كده
         if (lastKnownStatus[orderId] && lastKnownStatus[orderId] !== currentStatus) {
-            
+
             if (currentStatus === 'تم التأكيد') {
                 showOrderNotification(`خبر سعيد! طلبك رقم #${orderId} تم تأكيده وجاري تجهيزه ✨`, 'success');
-            } 
+            }
             else if (currentStatus === 'تم الرفض') {
                 showOrderNotification(`تحديث بخصوص طلبك #${orderId}: للأسف تم رفض الطلب. اضغطي لمشاهدة السبب.`, 'danger');
             }
-            
+
             hasUpdates = true;
         }
 
@@ -175,10 +175,10 @@ function showOrderNotification(message, type) {
 
     const toast = document.createElement('div');
     toast.className = `animate__animated animate__fadeInLeft mb-3`;
-    
+
     // تنسيق الإشعار
     const bgColor = type === 'success' ? '#28a745' : '#dc3545';
-    
+
     toast.innerHTML = `
         <div style="background: ${bgColor}; color: white; padding: 15px 25px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; min-width: 300px;" 
              onclick="window.location.href='my-orders.html'">
@@ -202,3 +202,21 @@ function showOrderNotification(message, type) {
         setTimeout(() => toast.remove(), 500);
     }, 7000);
 }
+// كود البحث الذكي
+document.getElementById('searchInput').addEventListener('keyup', function () {
+    let filter = this.value.toLowerCase();
+    // البحث عن كل منتج داخل حاوية الشبكة
+    let cards = document.querySelectorAll('#productsGrid > div');
+
+    cards.forEach(card => {
+        // البحث عن أي نص داخل الـ h6 (اسم المنتج)
+        let title = card.querySelector('h6').innerText.toLowerCase();
+        
+        if (title.includes(filter)) {
+            card.style.display = ""; // إظهار
+            card.classList.add('animate__animated', 'animate__fadeIn');
+        } else {
+            card.style.display = "none"; // إخفاء
+        }
+    });
+});
