@@ -1,135 +1,287 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glow Store | عالم الأناقة والجمال</title>
     <link rel="icon" type="image/png" href="./assets/logo.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Amiri:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Amiri:wght@700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
     <style>
-        :root { 
-            --gold: #651346; 
-            --accent: #a33b74; 
+        :root {
+            --gold: #651346;
+            --accent: #a33b74;
             --main-pink: #f8e1e7;
             --soft-white: #fdfdfd;
             --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        body { font-family: 'Cairo', sans-serif; background-color: var(--soft-white); overflow-x: hidden; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--soft-white);
+            overflow-x: hidden;
+            direction: rtl;
+        }
 
-        /* Navbar */
-        .navbar { padding: 15px 0; border-bottom: 1px solid rgba(0,0,0,0.05); background: white; }
-        .logo-glow { font-size: 1.8rem; font-weight: 900; color: var(--gold); text-decoration: none; font-family: 'Amiri', serif; }
-        .logo-glow span { color: #333; font-weight: 300; }
-        
-        .icon-link { position: relative; color: var(--gold); font-size: 1.3rem; transition: 0.3s; text-decoration: none; }
-        .icon-link:hover { transform: translateY(-3px); color: var(--accent); }
-        .badge-count { font-size: 0.65rem; padding: 3px 6px; border: 2px solid white; }
+        /* --- Navbar --- */
+        .navbar {
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
 
-        /* Hero Slider Customization */
+        .logo-glow {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--gold);
+            text-decoration: none;
+            font-family: 'Amiri', serif;
+            transition: 0.3s;
+        }
+
+        .logo-glow span {
+            color: #333;
+            font-weight: 300;
+        }
+
+        .icon-link {
+            position: relative;
+            color: var(--gold);
+            font-size: 1.3rem;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .icon-link:hover {
+            transform: translateY(-3px);
+            color: var(--accent);
+        }
+
+        .badge-count {
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            border: 2px solid white;
+        }
+
+        /* --- Hero Slider (Fixed for Mobile) --- */
         .hero-slide {
             height: 85vh;
             background-size: cover;
-            background-position: center;
+            background-position: center center;
             display: flex;
             align-items: center;
             position: relative;
             overflow: hidden;
         }
 
-        /* تأثير التكبير البطيء للصورة المفعلة */
+        /* تأثير التكبير البطيء المطور */
         .carousel-item.active .hero-slide {
-            animation: slowZoom 10s infinite alternate;
+            animation: slowZoom 10s infinite alternate ease-in-out;
         }
 
         @keyframes slowZoom {
-            from { transform: scale(1); }
-            to { transform: scale(1.15); }
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.1);
+            }
         }
 
         .hero-slide::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.3); 
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to left, rgba(0, 0, 0, 0.5), transparent);
             z-index: 1;
         }
 
-        .hero-content { 
-            position: relative; 
-            z-index: 2; 
-            text-align: right; 
-            color: white; 
-            text-shadow: 2px 2px 15px rgba(0,0,0,0.4);
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: right;
+            color: white;
+            text-shadow: 2px 2px 15px rgba(0, 0, 0, 0.4);
+            padding: 0 15px;
         }
-        
-        .hero-content h1 { font-size: 3.8rem; font-weight: 900; }
-        .hero-content h1 span { color: var(--main-pink); font-family: 'Amiri', serif; }
 
-        /* Product Cards */
+        .hero-content h1 {
+            font-size: clamp(2.2rem, 8vw, 3.8rem);
+            font-weight: 900;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content h1 span {
+            color: var(--main-pink);
+            font-family: 'Amiri', serif;
+        }
+
+        /* --- Product Cards --- */
         .product-card {
             border-radius: 20px;
             overflow: hidden;
             transition: var(--transition);
             background: white;
             border: none;
+            height: 100%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
         }
-        .product-card:hover { transform: translateY(-12px); box-shadow: 0 20px 40px rgba(101, 19, 70, 0.1) !important; }
-        
-        .img-wrapper { height: 320px; overflow: hidden; position: relative; }
-        .product-card img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; }
-        .product-card:hover img { transform: scale(1.1); }
+
+        .product-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 20px 40px rgba(101, 19, 70, 0.12) !important;
+        }
+
+        .img-wrapper {
+            height: 320px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.8s;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.1);
+        }
 
         .wishlist-btn {
-            position: absolute; top: 15px; left: 15px;
-            background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(5px);
-            border: none; width: 40px; height: 40px; border-radius: 50%;
-            color: #ff4d6d; z-index: 10; transition: 0.3s;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(5px);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: #ff4d6d;
+            z-index: 10;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .wishlist-btn:hover { background: white; transform: scale(1.1); }
+
+        .wishlist-btn:hover {
+            background: white;
+            transform: scale(1.1);
+            color: #ff002b;
+        }
 
         .btn-glow {
             background: linear-gradient(45deg, var(--gold), var(--accent));
-            color: white !important; border: none; padding: 12px 40px; border-radius: 50px;
-            font-weight: 700; transition: 0.4s; text-decoration: none; display: inline-block;
+            color: white !important;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: 700;
+            transition: 0.4s;
+            text-decoration: none;
+            display: inline-block;
         }
-        .btn-glow:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(101, 19, 70, 0.3); }
 
-        /* Toast Notification */
+        .btn-glow:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(101, 19, 70, 0.3);
+        }
+
+        /* --- Toast Notification --- */
         .custom-toast {
-            position: fixed; bottom: 25px; right: 25px;
-            background: var(--gold); color: white; padding: 15px 25px;
-            border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            z-index: 10000; display: flex; align-items: center; gap: 10px;
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: var(--gold);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: animate__fadeInUp 0.5s;
+        }
+
+        /* --- Media Queries (Mobile Fixes) --- */
+        @media (max-width: 768px) {
+            .hero-slide {
+                height: 60vh;
+                /* تصغير الطول للموبايل لمنع الزوم البشع */
+            }
+
+            .hero-content {
+                text-align: center;
+                /* سنترنا الكلام لشكل أفضل */
+            }
+
+            .hero-content h1 {
+                font-size: 2.2rem;
+            }
+
+            .img-wrapper {
+                height: 250px;
+                /* تقليل حجم صور المنتجات في الموبايل */
+            }
+
+            @keyframes slowZoom {
+                from {
+                    transform: scale(1);
+                }
+
+                to {
+                    transform: scale(1.05);
+                }
+
+                /* زوم أخف للموبايل */
+            }
         }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand logo-glow" href="index.html">GLOW<span>STORE</span></a>
-            
+
             <div class="d-flex align-items-center order-lg-last gap-3">
                 <a href="profile.html" class="icon-link"><i class="far fa-user"></i></a>
                 <a href="wishlist.html" class="icon-link">
                     <i class="far fa-heart"></i>
-                    <span class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle badge-count" id="wishlistCount">0</span>
+                    <span
+                        class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle badge-count"
+                        id="wishlistCount">0</span>
                 </a>
                 <a href="cart.html" class="icon-link" id="cartIcon">
                     <i class="fas fa-shopping-bag"></i>
-                    <span class="badge rounded-pill bg-dark position-absolute top-0 start-100 translate-middle badge-count" id="cartCount">0</span>
+                    <span
+                        class="badge rounded-pill bg-dark position-absolute top-0 start-100 translate-middle badge-count"
+                        id="cartCount">0</span>
                 </a>
             </div>
-            
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link active fw-bold" href="index.html" style="color: var(--gold) !important;">الرئيسية</a></li>
+                    <li class="nav-item"><a class="nav-link active fw-bold" href="index.html"
+                            style="color: var(--gold) !important;">الرئيسية</a></li>
                     <li class="nav-item"><a class="nav-link" href="#products">وصل حديثاً</a></li>
                     <li class="nav-item"><a class="nav-link" href="#features">لماذا نحن؟</a></li>
                 </ul>
@@ -143,7 +295,8 @@
                 <div class="hero-slide" style="background-image: url('./assets/img1.avif');">
                     <div class="container hero-content">
                         <h1 class="animate__animated animate__fadeInRight">تألقي بلمسة من <span>Glow</span></h1>
-                        <p class="fs-4 mb-4 animate__animated animate__fadeInRight animate__delay-1s">إكسسوارات صُممت لتبرز جمالكِ الخاص</p>
+                        <p class="fs-4 mb-4 animate__animated animate__fadeInRight animate__delay-1s">إكسسوارات صُممت
+                            لتبرز جمالكِ الخاص</p>
                         <a href="#products" class="btn btn-glow">تسوقي الآن</a>
                     </div>
                 </div>
@@ -198,7 +351,7 @@
                 <div style="width: 60px; height: 3px; background: var(--gold); margin: 10px auto;"></div>
             </div>
             <div class="row g-4" id="productsGrid">
-                </div>
+            </div>
         </div>
     </section>
 
@@ -209,4 +362,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/main.js"></script>
 </body>
+
 </html>
