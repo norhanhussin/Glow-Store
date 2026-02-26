@@ -1,9 +1,9 @@
 /**
- * Glow Store - Core Engine (Updated with more products)
+ * Glow Store - Core Engine (Integrated Version)
  */
 
-// 1. قاعدة بيانات المنتجات (تمت زيادة المنتجات إلى 12)
-const products = [
+// 1. قاعدة بيانات المنتجات الثابتة (12 منتج)
+const defaultProducts = [
     { id: 1, name: "طوق الورد الملكي", price: 120, image: "./assets/img1.avif" },
     { id: 2, name: "طقم توك لؤلؤ ناعم", price: 65, image: "./assets/img2.avif" },
     { id: 3, name: "إكسسوار متدلي ذهبي", price: 180, image: "./assets/img3.avif" },
@@ -18,21 +18,30 @@ const products = [
     { id: 12, name: "مشط شعر مزخرف", price: 70, image: "./assets/img6.avif" }
 ];
 
-// 2. إدارة الحالة (السلة والمفضلة)
+// 2. إدارة الحالة
 let cart = JSON.parse(localStorage.getItem('glow_cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('glow_wishlist')) || [];
+
+// دالة لجلب كل المنتجات (الثابتة + الأدمن)
+function getAllProducts() {
+    const adminProducts = JSON.parse(localStorage.getItem('glow_products')) || [];
+    return [...adminProducts, ...defaultProducts];
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     renderProducts();
     updateBadges();
+    checkOrderStatusUpdates();
 });
 
-// 3. عرض المنتجات في الصفحة بتصميم متناسق
+// 3. عرض المنتجات (تعديل: يستخدم getAllProducts بدلاً من المصفوفة الثابتة)
 function renderProducts() {
     const grid = document.getElementById('productsGrid');
     if (!grid) return;
 
-    grid.innerHTML = products.map((product, index) => {
+    const allProducts = getAllProducts();
+
+    grid.innerHTML = allProducts.map((product, index) => {
         const isInWishlist = wishlist.some(item => item.id === product.id);
 
         return `
@@ -42,7 +51,7 @@ function renderProducts() {
                     <i class="${isInWishlist ? 'fas' : 'far'} fa-heart"></i>
                 </button>
                 <div class="img-wrapper">
-                    <img src="${product.image}" alt="${product.name}" loading="lazy">
+                    <img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.src='./assets/logo.png'">
                 </div>
                 <div class="card-body text-center p-3">
                     <h6 class="fw-bold mb-1" style="font-size: 0.95rem;">${product.name}</h6>
@@ -56,11 +65,13 @@ function renderProducts() {
     }).join('');
 }
 
-// 4. وظيفة الإضافة للسلة مع تأثير بصري
+// 4. وظيفة الإضافة للسلة (تعديل: تبحث في كل المنتجات)
 function addToCart(id) {
-    const product = products.find(p => p.id === id);
-    const itemInCart = cart.find(item => item.id === id);
+    const allProducts = getAllProducts();
+    const product = allProducts.find(p => p.id === id);
+    if (!product) return;
 
+    const itemInCart = cart.find(item => item.id === id);
     if (itemInCart) {
         itemInCart.quantity += 1;
     } else {
@@ -71,15 +82,20 @@ function addToCart(id) {
     updateBadges();
 
     const cartIcon = document.getElementById('cartIcon');
-    cartIcon.classList.add('animate__animated', 'animate__rubberBand');
-    setTimeout(() => cartIcon.classList.remove('animate__animated', 'animate__rubberBand'), 1000);
+    if(cartIcon) {
+        cartIcon.classList.add('animate__animated', 'animate__rubberBand');
+        setTimeout(() => cartIcon.classList.remove('animate__animated', 'animate__rubberBand'), 1000);
+    }
 
     showToast(`تمت إضافة ${product.name} للسلة ✨`);
 }
 
-// 5. وظيفة قائمة الأمنيات
+// 5. وظيفة قائمة الأمنيات (تعديل: تبحث في كل المنتجات)
 function toggleWishlist(id) {
-    const product = products.find(p => p.id === id);
+    const allProducts = getAllProducts();
+    const product = allProducts.find(p => p.id === id);
+    if (!product) return;
+
     const index = wishlist.findIndex(item => item.id === id);
 
     if (index === -1) {
@@ -95,7 +111,7 @@ function toggleWishlist(id) {
     renderProducts();
 }
 
-// 6. تحديث الأرقام في الهيدر
+// 6. تحديث الأرقام
 function updateBadges() {
     const cartCount = document.getElementById('cartCount');
     const wishCount = document.getElementById('wishlistCount');
@@ -107,9 +123,8 @@ function updateBadges() {
     if (wishCount) wishCount.innerText = wishlist.length;
 }
 
-// 7. نظام التنبيهات الجميل
+// 7. نظام التنبيهات
 function showToast(msg) {
-    // إزالة التنبيهات القديمة إذا وجدت
     const oldToast = document.querySelector('.custom-toast');
     if (oldToast) oldToast.remove();
 
@@ -124,99 +139,70 @@ function showToast(msg) {
     }, 2500);
 }
 
-/**
- * Glow Store - Smart Notifications System
- * بيراقب لو الأدمن غير حالة الأوردر وبيطلع رسالة لليوزر
- */
-
-document.addEventListener('DOMContentLoaded', () => {
-    checkOrderStatusUpdates();
-});
-
+// 8. نظام متابعة تحديثات الطلب
 function checkOrderStatusUpdates() {
-    // 1. جلب الطلبات الحالية
     const orders = JSON.parse(localStorage.getItem('glow_orders')) || [];
-
-    // 2. جلب "آخر حالة معروفة" مخزنة عند العميل
-    // ده مفتاح هنخزن فيه الحالات عشان نعرف لو فيه جديد حصل
     const lastKnownStatus = JSON.parse(localStorage.getItem('glow_orders_status_tracker')) || {};
-
-    let hasUpdates = false;
 
     orders.forEach(order => {
         const orderId = order.id;
         const currentStatus = order.status || 'قيد المراجعة';
 
-        // 3. المقارنة: لو الحالة الحالية مختلفة عن اللي اليوزر شافها قبل كده
         if (lastKnownStatus[orderId] && lastKnownStatus[orderId] !== currentStatus) {
-
             if (currentStatus === 'تم التأكيد') {
                 showOrderNotification(`خبر سعيد! طلبك رقم #${orderId} تم تأكيده وجاري تجهيزه ✨`, 'success');
+            } else if (currentStatus === 'تم الرفض') {
+                showOrderNotification(`تحديث بخصوص طلبك #${orderId}: للأسف تم رفض الطلب.`, 'danger');
             }
-            else if (currentStatus === 'تم الرفض') {
-                showOrderNotification(`تحديث بخصوص طلبك #${orderId}: للأسف تم رفض الطلب. اضغطي لمشاهدة السبب.`, 'danger');
-            }
-
-            hasUpdates = true;
         }
-
-        // تحديث الحالة في المتعقب
         lastKnownStatus[orderId] = currentStatus;
     });
 
-    // 4. حفظ الحالات الجديدة عشان الإشعار ميظهرش تاني لنفس الأوردر
     localStorage.setItem('glow_orders_status_tracker', JSON.stringify(lastKnownStatus));
 }
 
-// دالة إظهار الإشعار بشكل جمالي (Toast)
 function showOrderNotification(message, type) {
-    const notificationContainer = document.getElementById('toast-container');
-    if (!notificationContainer) return;
+    const container = document.getElementById('toast-container');
+    if (!container) return;
 
     const toast = document.createElement('div');
     toast.className = `animate__animated animate__fadeInLeft mb-3`;
-
-    // تنسيق الإشعار
     const bgColor = type === 'success' ? '#28a745' : '#dc3545';
 
     toast.innerHTML = `
         <div style="background: ${bgColor}; color: white; padding: 15px 25px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); cursor: pointer; min-width: 300px;" 
              onclick="window.location.href='my-orders.html'">
             <div class="d-flex align-items-center">
-                <div class="me-3">
-                    <i class="fas ${type === 'success' ? 'fa-check-double' : 'fa-exclamation-triangle'} fa-lg"></i>
-                </div>
+                <i class="fas ${type === 'success' ? 'fa-check-double' : 'fa-exclamation-triangle'} fa-lg me-3"></i>
                 <div>
-                    <strong class="d-block">تحديث جديد للطلب!</strong>
+                    <strong>تحديث جديد للطلب!</strong><br>
                     <small>${message}</small>
                 </div>
             </div>
         </div>
     `;
-
-    notificationContainer.appendChild(toast);
-
-    // حذف الإشعار بعد 7 ثواني
+    container.appendChild(toast);
     setTimeout(() => {
         toast.classList.replace('animate__fadeInLeft', 'animate__fadeOutLeft');
         setTimeout(() => toast.remove(), 500);
     }, 7000);
 }
-// كود البحث الذكي
-document.getElementById('searchInput').addEventListener('keyup', function () {
-    let filter = this.value.toLowerCase();
-    // البحث عن كل منتج داخل حاوية الشبكة
-    let cards = document.querySelectorAll('#productsGrid > div');
 
-    cards.forEach(card => {
-        // البحث عن أي نص داخل الـ h6 (اسم المنتج)
-        let title = card.querySelector('h6').innerText.toLowerCase();
-        
-        if (title.includes(filter)) {
-            card.style.display = ""; // إظهار
-            card.classList.add('animate__animated', 'animate__fadeIn');
-        } else {
-            card.style.display = "none"; // إخفاء
-        }
+// 9. كود البحث الذكي
+const searchInput = document.getElementById('searchInput');
+if (searchInput) {
+    searchInput.addEventListener('keyup', function () {
+        let filter = this.value.toLowerCase();
+        let cards = document.querySelectorAll('#productsGrid > div');
+
+        cards.forEach(card => {
+            let title = card.querySelector('h6').innerText.toLowerCase();
+            if (title.includes(filter)) {
+                card.style.display = "";
+                card.classList.add('animate__animated', 'animate__fadeIn');
+            } else {
+                card.style.display = "none";
+            }
+        });
     });
-});
+}
