@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول | Glow Store</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    
+    <style>
+        :root { --gold: #651346; --accent: #a33b74; --bg: #fdfafb; }
+        
+        body { 
+            background: linear-gradient(135deg, #fff5f8 0%, #f3e7ed 100%);
+            font-family: 'Cairo', sans-serif;
+            height: 100vh; display: flex; align-items: center; justify-content: center;
+            margin: 0;
+        }
+
+        .auth-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(101, 19, 70, 0.1);
+            width: 100%; max-width: 460px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .logo-glow { font-size: 2.2rem; font-weight: 700; color: var(--gold); text-decoration: none; margin-bottom: 25px; display: block; text-align: center; }
+        .logo-glow span { color: #333; font-weight: 300; }
+
+        /* تنسيق التبديل بين الدخول والتسجيل */
+        .nav-pills { 
+            background: #f1f1f1; 
+            border-radius: 50px; 
+            padding: 5px; 
+            margin-bottom: 30px;
+            display: flex;
+        }
+        .nav-pills .nav-item { flex: 1; }
+        .nav-pills .nav-link {
+            width: 100%;
+            color: #777; 
+            border-radius: 50px; 
+            padding: 10px; 
+            font-weight: 600; 
+            transition: 0.3s;
+            border: none;
+        }
+        .nav-pills .nav-link.active { background-color: var(--gold); color: white; }
+
+        /* --- ضبط المحاذاة والترتيب (RTL Fix) --- */
+        .form-group-custom { 
+            text-align: right; 
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .label-custom {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--gold);
+            margin-bottom: 8px;
+            font-weight: 700;
+            padding-right: 5px;
+        }
+
+        .form-control {
+            text-align: right !important; /* الكتابة من اليمين */
+            direction: rtl !important;    /* اتجاه الحروف */
+            border: none;
+            border-bottom: 2px solid #eee;
+            border-radius: 0;
+            background: #f9f9f9 !important; /* خلفية خفيفة جداً لتمييز الحقل */
+            padding: 12px 15px;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-bottom-color: var(--gold);
+            background: #fff !important;
+        }
+
+        /* تنسيق الزرار */
+        .btn-auth {
+            background: linear-gradient(to left, var(--gold), var(--accent));
+            color: white; border: none; border-radius: 50px; padding: 14px;
+            width: 100%; font-weight: 700; margin-top: 15px;
+            transition: 0.4s;
+            font-size: 1.1rem;
+        }
+        .btn-auth:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(101, 19, 70, 0.2); }
+
+        .social-login { margin-top: 30px; border-top: 1px solid #eee; padding-top: 20px; text-align: center; }
+        .social-btn { 
+            width: 45px; height: 45px; border-radius: 50%; border: 1px solid #eee; 
+            display: inline-flex; align-items: center; justify-content: center; 
+            margin: 0 8px; color: #555; transition: 0.3s; text-decoration: none;
+        }
+        .social-btn:hover { background: var(--gold); color: white; border-color: var(--gold); }
+
+        #toast-container { position: fixed; top: 20px; left: 20px; z-index: 10000; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container animate__animated animate__fadeIn">
+        <a href="index.html" class="logo-glow">GLOW<span>STORE</span></a>
+
+        <ul class="nav nav-pills mb-4" id="pills-tab">
+            <li class="nav-item">
+                <button class="nav-link active" onclick="showForm('login')" id="tab-login">دخول</button>
+            </li>
+            <li class="nav-item">
+                <button class="nav-link" onclick="showForm('register')" id="tab-register">تسجيل جديد</button>
+            </li>
+        </ul>
+
+        <div id="loginSection" class="animate__animated">
+            <div class="form-group-custom">
+                <label class="label-custom">البريد الإلكتروني</label>
+                <input type="email" class="form-control" id="logEmail" placeholder="example@mail.com">
+            </div>
+            <div class="form-group-custom">
+                <label class="label-custom">كلمة المرور</label>
+                <input type="password" class="form-control" id="logPass" placeholder="********">
+            </div>
+            <a href="#" class="text-muted small d-block text-end mb-3 text-decoration-none">نسيتي كلمة المرور؟</a>
+            <button class="btn-auth" onclick="handleLogin()">دخول للمتجر</button>
+        </div>
+
+        <div id="registerSection" style="display: none;" class="animate__animated">
+            <div class="form-group-custom">
+                <label class="label-custom">الاسم بالكامل</label>
+                <input type="text" class="form-control" id="regName" placeholder="اكتبي اسمكِ هنا">
+            </div>
+            <div class="form-group-custom">
+                <label class="label-custom">البريد الإلكتروني</label>
+                <input type="email" class="form-control" id="regEmail" placeholder="example@mail.com">
+            </div>
+            <div class="form-group-custom">
+                <label class="label-custom">كلمة المرور</label>
+                <input type="password" class="form-control" id="regPass" placeholder="********">
+            </div>
+            <button class="btn-auth" onclick="handleRegister()">إنشاء حسابي</button>
+        </div>
+
+        <div class="social-login">
+            <p class="small text-muted mb-2">أو عبر حساباتك</p>
+            <a href="#" class="social-btn"><i class="fab fa-google"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-btn"><i class="fab fa-apple"></i></a>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="./js/auth.js"></script>
+</body>
+</html>
