@@ -9,7 +9,7 @@
     
     if (isAdmin !== 'true') {
         // لو حاول يدخل الصفحة مباشرة بدون لوجن
-        window.location.href = 'admin-login.html';
+        window.location.href = './login.html';
     }
 })();
 
@@ -33,7 +33,7 @@ function logoutAdmin() {
     }).then((result) => {
         if (result.isConfirmed) {
             localStorage.removeItem('glow_admin_token');
-            window.location.href = 'admin-login.html';
+            window.location.href = './login.html';
         }
     });
 }
